@@ -23,6 +23,7 @@ public class Podometro {
     private int totalPasosDomingo;
     private int totalDistanciaSemana;
     private int totalDistanciaFinSemana;
+
     private int minutos;
     private int caminatasNoche;
 
@@ -42,7 +43,7 @@ public class Podometro {
         totalDistanciaFinSemana = 0;
         minutos = 0;
         caminatasNoche = 0;
-        
+
     }
 
     /**
@@ -50,9 +51,7 @@ public class Podometro {
      *  
      */
     public String getMarca() {
-
-         return marca;
-
+        return marca;
     }
 
     /**
@@ -65,11 +64,17 @@ public class Podometro {
      *  
      */
     public void configurar(double queAltura, char queSexo) {
-
-        
+        altura = (int)queAltura;
+        sexo = queSexo;
+        if (sexo == 'H') {
+            longitudZancada = (int)Math.ceil(altura * ZANCADA_HOMBRE);
+        }
+        else {
+            longitudZancada = (int)Math.floor(altura * ZANCADA_MUJER);
+        }
     }
 
-     /**
+    /**
      *  Recibe cuatro parámetros que supondremos correctos:
      *    pasos - el nº de pasos caminados
      *    dia - nº de día de la semana en que se ha hecho la caminata 
@@ -83,13 +88,11 @@ public class Podometro {
      *   (leer enunciado del ejercicio)
      */
     public void registrarCaminata(int pasos, int dia, int horaInicio,
-                            int horaFin) {
-
-       
+    int horaFin) {
 
     }
-    
-     /**
+
+    /**
      * Muestra en pantalla la configuración del podómetro
      * (altura, sexo y longitud de la zancada)
      * 
@@ -97,8 +100,6 @@ public class Podometro {
      *  
      */
     public void printConfiguracion() {
-
-        
 
     }
 
@@ -111,23 +112,16 @@ public class Podometro {
      */
     public void printEstadísticas() {
 
-        
-
     }
-
-   
 
     /**
      *  Calcula y devuelve un String que representa el nombre del día
      *  en el que se ha caminado más pasos - "SÁBADO"   "DOMINGO" o  "LABORABLES"
      */
     public String diaMayorNumeroPasos() {
-
-         
-
+            
     }
-    
-    
+
     /**
      * Restablecer los valores iniciales del podómetro
      * Todos los atributos se ponen a cero salvo el sexo
@@ -136,8 +130,5 @@ public class Podometro {
      */    
     public void reset() {
 
-        
-
     }
-
 }
