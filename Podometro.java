@@ -16,14 +16,14 @@ public class Podometro {
     private final int DOMINGO = 7;
     // Atributos
     private String marca;
-    private double altura;
+    private int altura;
     private char sexo;
     private int longitudZancada;
     private int totalPasosLaborables;
     private int totalPasosSabado;
     private int totalPasosDomingo;
-    private int totalDistanciaSemana;
-    private int totalDistanciaFinSemana;
+    private double totalDistanciaSemana;
+    private double totalDistanciaFinSemana;
     private int minutos;
     private int caminatasNoche;
 
@@ -64,13 +64,13 @@ public class Podometro {
      *  
      */
     public void configurar(double queAltura, char queSexo) {
-        altura = queAltura;
+        altura = (int)queAltura;
         sexo = queSexo;
         if (sexo == 'H') {
-            longitudZancada = (int)Math.ceil(altura * ZANCADA_HOMBRE);
+            longitudZancada = (int)Math.ceil((altura) * ZANCADA_HOMBRE);
         }
         else {
-            longitudZancada = (int)Math.floor(altura * ZANCADA_MUJER);
+            longitudZancada = (int)Math.floor((altura) * ZANCADA_MUJER);
         }
     }
 
@@ -90,35 +90,33 @@ public class Podometro {
     public void registrarCaminata(int pasos, int dia, int horaInicio,
     int horaFin) {
         // total de pasos
-        if (dia == SABADO) {
-            totalPasosSabado = pasos;
-        }
-        else if (dia == DOMINGO) {
-            totalPasosDomingo = pasos;
-        }
-        else {
-            switch (dia) {
-                case 1: totalPasosLaborables = pasos;
-                    break;
-                case 2: totalPasosLaborables += pasos;
-                    break;
-                case 3: totalPasosLaborables += pasos;
-                    break;
-                case 4: totalPasosLaborables += pasos;
-                    break;
-                case 5: totalPasosLaborables += pasos;
-                    break;
-            }
+        switch (dia) {
+            case 1: totalPasosLaborables += pasos;
+                break;
+            case 2: totalPasosLaborables += pasos;
+                break;
+            case 3: totalPasosLaborables += pasos;
+                break;
+            case 4: totalPasosLaborables += pasos;
+                break;
+            case 5: totalPasosLaborables += pasos;
+                break;
+            case SABADO: totalPasosSabado += pasos;
+                break;
+            case DOMINGO: totalPasosDomingo += pasos;
+                break;
         }
         // caminatas noche
         if (horaInicio >= 2100 || horaFin > 2100) {
             caminatasNoche++;
         }
-        
-
-        
+        // cálculo de distancia
+        totalDistanciaSemana = (double) ((totalPasosLaborables + totalPasosSabado + totalPasosDomingo) * longitudZancada) / 100000;
+        totalDistanciaFinSemana = (double) ((totalPasosSabado + totalPasosDomingo) * longitudZancada) / 100000;
+        // calcular minutos
+        minutos = horaFin - horaInicio;
     }
-
+    
     /**
      * Muestra en pantalla la configuración del podómetro
      * (altura, sexo y longitud de la zancada)
@@ -154,17 +152,16 @@ public class Podometro {
      */
     public void printEstadísticas() {
         System.out.println ("Estadísticas\n " + "********************\n"
-                            + "Distancia recorrida toda la semana:" + totalDistanciaSemana + "KM\n"
-                            + "Distancia recorrida fin de semana:" + totalDistanciaFinSemana + "KM\n"
-                            + "\n"
-                            + "Nº pasos dias laborables:" + totalPasosLaborables
-                            +"\nNº pasos SÁBADO:" + totalPasosSabado
-                            +"\nNº pasos DOMINGO:" + totalPasosDomingo
-                            +"\n"
-                            +"Nº caminatas realizadas a partir de las 21h:" + caminatasNoche
-                            +"\n"
-                            +"\nTiempo total caminado en la semana:" + minutos
-                            +"\nDia/s con mas pasos caminados:");
+            + "Distancia recorrida toda la semana:" + totalDistanciaSemana + "KM\n"
+            + "Distancia recorrida fin de semana:" + totalDistanciaFinSemana + "KM\n"
+            + "\n"
+            + "Nº pasos dias laborables:" + totalPasosLaborables
+            +"\nNº pasos SÁBADO:" + totalPasosSabado
+            +"\nNº pasos DOMINGO:" + totalPasosDomingo
+            +"\n"
+            +"Nº caminatas realizadas a partir de las 21h:" + caminatasNoche
+            +"\n"
+            +"\nTiempo total caminado en la semana:" + minutos);
     }
 
     /**
@@ -202,3 +199,5 @@ public class Podometro {
         caminatasNoche = 0;
     }
 }
+
+
