@@ -89,34 +89,35 @@ public class Podometro {
      */
     public void registrarCaminata(int pasos, int dia, int horaInicio,
     int horaFin) {
-        // total de pasos
+        int minutosTotalesHoraSalida = (horaInicio / 100) * 60 + horaInicio % 100;
+        int minutosTotalesHoraLlegada = (horaFin / 100) * 60 + horaFin % 100;
+        int tiempo = minutosTotalesHoraLlegada - minutosTotalesHoraSalida;
+        // total de pasos y minutos
         switch (dia) {
-            case 1: totalPasosLaborables += pasos;
-                break;
-            case 2: totalPasosLaborables += pasos;
-                break;
-            case 3: totalPasosLaborables += pasos;
-                break;
-            case 4: totalPasosLaborables += pasos;
-                break;
+            case 1:
+            case 2:
+            case 3:
+            case 4:
             case 5: totalPasosLaborables += pasos;
+                minutos += tiempo;
                 break;
             case SABADO: totalPasosSabado += pasos;
+                minutos += tiempo;
                 break;
             case DOMINGO: totalPasosDomingo += pasos;
+                minutos += tiempo;
                 break;
+            default : pasos = 0;
         }
         // caminatas noche
         if (horaInicio >= 2100 || horaFin > 2100) {
             caminatasNoche++;
         }
-        // cálculo de distancia
-        totalDistanciaSemana = (double) ((totalPasosLaborables + totalPasosSabado + totalPasosDomingo) * longitudZancada) / 100000;
-        totalDistanciaFinSemana = (double) ((totalPasosSabado + totalPasosDomingo) * longitudZancada) / 100000;
-        // calcular minutos
-        minutos = horaFin - horaInicio;
+        // cálculo de la distancia
+        totalDistanciaSemana = (double)((totalPasosLaborables + totalPasosSabado + totalPasosDomingo) * longitudZancada) / 100000;
+        totalDistanciaFinSemana = (double)((totalPasosSabado + totalPasosDomingo) * longitudZancada) / 100000;
     }
-    
+
     /**
      * Muestra en pantalla la configuración del podómetro
      * (altura, sexo y longitud de la zancada)
@@ -151,17 +152,19 @@ public class Podometro {
      *  
      */
     public void printEstadísticas() {
-        System.out.println ("Estadísticas\n " + "********************\n"
-            + "Distancia recorrida toda la semana:" + totalDistanciaSemana + "KM\n"
-            + "Distancia recorrida fin de semana:" + totalDistanciaFinSemana + "KM\n"
+        int hora = minutos / 60;
+        int min = minutos % 60;
+        System.out.println ("\n" + "Estadísticas\n" + "********************\n"
+            + "Distancia recorrida toda la semana: " + totalDistanciaSemana + "KM\n"
+            + "Distancia recorrida fin de semana: " + totalDistanciaFinSemana + "KM\n"
             + "\n"
-            + "Nº pasos dias laborables:" + totalPasosLaborables
-            +"\nNº pasos SÁBADO:" + totalPasosSabado
-            +"\nNº pasos DOMINGO:" + totalPasosDomingo
+            + "Nº pasos dias laborables: " + totalPasosLaborables
+            +"\nNº pasos SÁBADO: " + totalPasosSabado
+            +"\nNº pasos DOMINGO: " + totalPasosDomingo
             +"\n"
-            +"Nº caminatas realizadas a partir de las 21h:" + caminatasNoche
+            +"Nº caminatas realizadas a partir de las 21h: " + caminatasNoche
             +"\n"
-            +"\nTiempo total caminado en la semana:" + minutos);
+            +"\nTiempo total caminado en la semana: " + hora + "h" + " y " + min + "m");
     }
 
     /**
@@ -169,15 +172,36 @@ public class Podometro {
      *  en el que se ha caminado más pasos - "SÁBADO"   "DOMINGO" o  "LABORABLES"
      */
     public String diaMayorNumeroPasos() {
-        if (totalPasosLaborables > totalPasosSabado && totalPasosLaborables > totalPasosDomingo) {
-            return "Laborables";
+       int mayor;
+        if (totalPasosLaborables >= totalPasosSabado){
+            mayor = totalPasosLaborables;
+            if (mayor < totalPasosDomingo){
+                return "Domingo";
+            }
+            else if  (mayor == totalPasosDomingo && mayor != totalPasosSabado){
+                return "Laborables Domingo";
+            }
+            else if (mayor == totalPasosDomingo && mayor == totalPasosSabado){
+                return "Laborable Sábado Domingo";
+            }
+            else if (mayor == totalPasosSabado){
+                return "Laborables Sábado";
+            }
+            else{
+                return "Laborables";
+            }
         }
-        else if (totalPasosSabado > totalPasosLaborables && totalPasosSabado > totalPasosDomingo) {
+        else{
+            mayor = totalPasosSabado;
+            if (mayor < totalPasosDomingo){
+                return "Domingo";
+            }
+            else if (mayor == totalPasosDomingo){
+                return "Sábado Domingo";
+            }
             return "Sábado";
         }
-        else {
-            return "Domingo";
-        }
+
     }
 
     /**
@@ -199,5 +223,4 @@ public class Podometro {
         caminatasNoche = 0;
     }
 }
-
 
