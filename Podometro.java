@@ -110,7 +110,7 @@ public class Podometro {
             default : pasos = 0;
         }
         // caminatas noche
-        if (horaInicio >= 2100 || horaFin > 2100) {
+        if (horaInicio >= 2100) {
             caminatasNoche++;
         }
         // cálculo de la distancia
